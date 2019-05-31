@@ -1,0 +1,47 @@
+
+
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>チャンネル登録</title>
+    <meta content="channelAdd" name="page-name">
+    <div th:replace="_common::header"></div>
+</head>
+<body>
+<header th:replace="header::navbar"></header>
+<div class="container mx-auto" id="content">
+    <div class="row mb-3">
+        <h3>チャンネル登録</h3>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-12 alert alert-success" id="msg" role="alert" th:if="${msg != null}">
+            <th:block th:text="${msg}"></th:block>
+        </div>
+        <div class="col-12 alert alert-danger" id="errorMsg" role="alert" th:if="${errorMsg != null}">
+            <th:block th:text="${errorMsg}"></th:block>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <form method="post" th:action="@{/channel/add}" th:object="${channel}">
+                <div class="form-group">
+                    <label>チャンネル名称：</label>
+                    <input class="form-control" id="channelName" name="channelName"
+                           th:value="${channel.channelName}"
+                           type="text">
+                    <span class="error-msg" id="channelNameErrorMsg" th:errors="*{channelName}"
+                          th:if="${#fields.hasErrors('channelName')}">channelName error</span>
+                </div>
+                <div class="form-group">
+                    <label>概要：</label>
+                    <input class="form-control" id="overview" name="overview" th:value="${channel.overview}" type="text"/>
+                    <span class="error-msg" id="overviewErrorMsg" th:errors="*{overview}"
+                          th:if="${#fields.hasErrors('overview')}">overview error</span>
+                </div>
+                <button class="btn btn-success float-right" id="addBtn" type="submit">登録</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

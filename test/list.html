@@ -1,0 +1,69 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <title>チャンネル一覧</title>
+    <meta content="channelList" name="page-name">
+    <div th:replace="_common::header"></div>
+</head>
+<body>
+<header th:replace="header::navbar"></header>
+<div class="container mx-auto" id="content">
+    <div class="row mb-3">
+        <h3>チャンネル一覧</h3>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-12 alert alert-success" id="msg" role="alert" th:if="${msg != null}">
+            <th:block th:text="${msg}"></th:block>
+        </div>
+        <div class="col-12 alert alert-danger" id="errorMsg" role="alert" th:if="${errorMsg != null}">
+            <th:block th:text="${errorMsg}"></th:block>
+        </div>
+        <div class="col-12 alert alert-info" id="nodata" role="alert" th:if="${nodata != null}">
+            <th:block th:text="${nodata}"></th:block>
+        </div>
+    </div>
+    <div class="column" id="channels">
+        <tbody>
+        <tr th:each="channel : ${channels}">
+            <div class="container p-3">
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <h4>
+                            <a th:href="@{/channel/edit(channelId=${channel.channelId})}"
+                               sec:authorize="hasRole('ROLE_ADMIN')"
+                               th:text="${channel.channelName}">
+                            </a>
+
+                            <a th:href="@{/channel/edit(channelId=${channel.channelId})}"
+                               sec:authorize="!hasRole('ROLE_ADMIN') && hasRole('ROLE_USER')"
+                               th:if="${#authentication.principal.userId == channel.userId}"
+                               th:text="${channel.channelName}">
+                            </a>
+                            <div th:text="${channel.channelName}"
+                                 sec:authorize="!hasRole('ROLE_ADMIN') && hasRole('ROLE_USER')"
+                                 th:if="${#authentication.principal.userId != channel.userId}">
+                            </div>
+                            <div th:text="${channel.channelName}"
+                                 sec:authorize="!hasRole('ROLE_ADMIN') && !hasRole('ROLE_USER')"></div>
+                        </h4>
+
+                        <p th:text="${channel.overview}"></p>
+
+                        <div class="float-sm-right">
+                            <button type="button" class="btn btn-primary btn-sm" th:href="@{/knowledge/list(channel.channelId)}">
+                                ナレッジ数 <span class="badge badge-light" th:text="${channel.knowledgeCount}"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </tr>
+        </tbody>
+    </div>
+    <div class="row justify-content-center">
+        <div id="pagination"
+             th:replace="pagination :: pagination (url='/channel/list', page=${page}, channelId=null)"></div>
+    </div>
+</div>
+</body>
+</html>

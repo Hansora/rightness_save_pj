@@ -1,0 +1,26 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="pagination(url, page, channelId)">
+    <nav aria-label="paging" th:if="${0 < page.totalPages}">
+        <ul class="pagination" th:with="url=(${channelId != null} ? @{${url}(channelId=${channelId})} : ${url})">
+            <li class="page-item">
+                <a aria-label="prev" class="page-link"
+                   th:href="@{${url}(page=(${ 0 < page.number ? page.number - 1 : page.number}))}">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li th:classappend="${page.number == i} ? 'page-item active':'page-item'"
+                th:each='i : ${#numbers.sequence(0, page.totalPages - 1)}'>
+                <a class="page-link" th:href="@{${url}(page=${i})}">
+                    <span th:text='${i+1}'>1</span>
+                </a>
+            </li>
+            <li class="page-item">
+                <a aria-label="next" class="page-link"
+                   th:href="@{${url}(page=(${page.number == page.totalPages - 1 ? page.number : page.number + 1}))}">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
+</html>
